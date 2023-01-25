@@ -1,13 +1,17 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import binom
+import math
 
-def graph_binomial_distribution(n, p, c_level):
+def graph_binomial_distribution(n, p, c_level=0.1, z=None):
 
     # Create k, prob and cumulative_prob
     k = np.arange(0, n+1)
     binomial_prob = binom.pmf(k, n, p)
     cumulative_prob = np.cumsum(binomial_prob)
+    mean = n * p
+    sigma = math.sqrt(n * p * (1-p))
+    z_scores = (k-mean)/sigma
 
     # create plot
     plt.bar(k, binomial_prob, color='g')
@@ -18,8 +22,8 @@ def graph_binomial_distribution(n, p, c_level):
 
     # find confidence_level_cutoffs
 
-    left_cutoff_value = np.searchsorted(cumulative_prob, c_level, side="left")
-    right_cutoff_value = np.searchsorted(cumulative_prob, 1-c_level, side="left") + 1
+    left_cutoff_value = (np.searchsorted(cumulative_prob, c_level, side="left") if z is None else np.searchsorted(z_scores, -z))
+    right_cutoff_value = (np.searchsorted(cumulative_prob, 1-c_level, side="left") + 1 if z is None else np.searchsorted(z_scores, z))
 
     for i in range(left_cutoff_value):
         plt.bar(k[i], binomial_prob[i], color='r')
