@@ -3,7 +3,8 @@ from matplotlib import pyplot as plt
 from scipy.stats import binom
 import math
 
-class binomial_distribution():
+
+class BinomialDistribution:
     def __init__(self, n, p):
         self.n = n
         self.p = p
@@ -37,7 +38,7 @@ class binomial_distribution():
         if side == 'left':
             return np.searchsorted(self.cumulative_probabilities, c_level, side='left') - 1
         elif side == 'right':
-            return np.searchsorted(self.cumulative_probabilities, 1-c_level, side="left") + 1
+            return np.searchsorted(self.cumulative_probabilities, 1 - c_level, side="left") + 1
         else:
             raise ValueError("left or right expected")
 
@@ -63,7 +64,7 @@ class binomial_distribution():
         if z:
             for i in range(self.cutoff_zscore(-z)):
                 plt.bar(self.range[i], self.probabilities[i], color='r')
-            for j in range(self.cutoff_zscore(z), self.n+1):
+            for j in range(self.cutoff_zscore(z), self.n + 1):
                 plt.bar(self.range[j], self.probabilities[j], color='r')
         # show graph
 
