@@ -25,6 +25,9 @@ class BinomialDistribution:
     def cumulative_prob(self, k):
         return binom.cdf(k, self.n, self.p)
 
+    def probability_between(self, a, b):
+        return self.probabilities[a:b+1].sum()
+
     def find_c_level(self, k):
         if k < self.mean:
             return binom.cdf(k, self.n, self.p)
