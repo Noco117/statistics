@@ -43,7 +43,7 @@ class BinomialDistribution:
         if k < self.mean:
             return binom.cdf(k, self.n, self.p)
         elif k > self.mean:
-            return binom.cdf(k, self.n, self.p)
+            return 1-binom.cdf(k-1, self.n, self.p)
 
     def cutoff_zscore(self, z_score):
         return np.searchsorted(self.z_scores, z_score)
@@ -67,7 +67,7 @@ class BinomialDistribution:
         plt.title(f"Binomial Distribution (n={self.n}, p={self.p})")
 
         if c_level and z:
-            raise Exception("graph() takes only either c_level or z_score not both")
+            raise Exception("Unexpected Parameter: graph() takes only either c_level or z_score not both")
 
         if c_level:
             for i in range(self.cutoff_confidence_level(c_level) + 1):
