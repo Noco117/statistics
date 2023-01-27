@@ -19,6 +19,17 @@ class BinomialDistribution:
         self.cumulative_probabilities = np.cumsum(self.probabilities)
         self.z_scores = (self.range - self.mean) / self.sigma
 
+    def __str__(self, cumulative=False):
+        str1 = f"Binomial Distribution with params:\n\n" \
+               f"n: {self.n}\n" \
+               f"p: {self.p}\n\n\n" \
+
+        str2 = ""
+        for i, j in enumerate(self.probabilities if not cumulative else self.cumulative_probabilities):
+            str2 += f"{i} - {j} \n"
+
+        return str1 + str2
+
     def binomial_prob(self, k):
         return binom.pmf(k, self.n, self.p)
 
@@ -45,11 +56,11 @@ class BinomialDistribution:
         else:
             raise ValueError("left or right expected")
 
-    def graph(self, *, c_level=None, z=None):
+    def graph(self, *, c_level=None, z=None, clr='g', outlier_clr='r', face_clr="white"):
 
         # create bar graph
-
-        plt.bar(self.range, self.probabilities, color='g')
+        plt.figure(facecolor=face_clr)
+        plt.bar(self.range, self.probabilities, color=clr)
 
         plt.xlabel("k")
         plt.ylabel("Probability")
@@ -60,15 +71,15 @@ class BinomialDistribution:
 
         if c_level:
             for i in range(self.cutoff_confidence_level(c_level) + 1):
-                plt.bar(self.range[i], self.probabilities[i], color='r')
+                plt.bar(self.range[i], self.probabilities[i], color=outlier_clr)
             for j in range(self.cutoff_confidence_level(c_level, side='right'), self.n + 1):
-                plt.bar(self.range[j], self.probabilities[j], color='r')
+                plt.bar(self.range[j], self.probabilities[j], color=outlier_clr)
 
         if z:
             for i in range(self.cutoff_zscore(-z)):
-                plt.bar(self.range[i], self.probabilities[i], color='r')
+                plt.bar(self.range[i], self.probabilities[i], color=outlier_clr)
             for j in range(self.cutoff_zscore(z), self.n + 1):
-                plt.bar(self.range[j], self.probabilities[j], color='r')
+                plt.bar(self.range[j], self.probabilities[j], color=outlier_clr)
         # show graph
 
         plt.show()
