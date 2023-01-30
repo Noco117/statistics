@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import binom
+from scipy.stats import norm
 import math
 
 
@@ -56,12 +57,13 @@ class BinomialDistribution:
         else:
             raise ValueError("left or right expected")
 
-    def graph(self, *, c_level=None, z=None, clr='g', outlier_clr='r', face_clr="white"):
+    def graph(self, *, c_level=None, z=None, clr='g', outlier_clr='r', face_clr="white", full_plot=False):
 
         # create bar graph
         plt.figure(facecolor=face_clr)
         plt.bar(self.range, self.probabilities, color=clr)
-
+        if not full_plot:
+            plt.xlim(math.floor(self.mean-4*self.sigma), math.ceil(self.mean+4*self.sigma))
         plt.xlabel("k")
         plt.ylabel("Probability")
         plt.title(f"Binomial Distribution (n={self.n}, p={self.p})")
@@ -82,4 +84,24 @@ class BinomialDistribution:
                 plt.bar(self.range[j], self.probabilities[j], color=outlier_clr)
         # show graph
 
+        plt.show()
+
+    def normal_approximation(self):
+        return NormalDistribution(self.mean, self.sigma)
+
+
+class NormalDistribution():
+    def __init__(self, mean, sigma):
+        self.distr = norm(loc=mean, scale=sigma ** 2)
+        self.x = np.linspace(self.distr.ppf(0.01), self.distr.ppf(0.99))
+        self.sigma = sigma
+        self.mean = mean
+
+        self.probability_density = self.distr.pdf(self.x)
+        self.cumulative_density = self.distr.cdf(self.x)
+
+    def graph(self):
+        plt.xlabel("x")
+        plt.ylabel("Probability Density")
+        plt.plot(self.x, self.probability_density)
         plt.show()
