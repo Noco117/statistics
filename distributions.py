@@ -57,13 +57,13 @@ class BinomialDistribution:
         else:
             raise ValueError("left or right expected")
 
-    def graph(self, *, c_level=None, z=None, clr='g', outlier_clr='r', face_clr="white", full_plot=False):
+    def graph(self, *, c_level=None, z=None, clr='g', outlier_clr='r', face_clr="white", full_plot=False, within_z=4):
 
         # create bar graph
         plt.figure(facecolor=face_clr)
         plt.bar(self.range, self.probabilities, color=clr)
         if not full_plot:
-            plt.xlim(math.floor(self.mean-4*self.sigma), math.ceil(self.mean+4*self.sigma))
+            plt.xlim(math.floor(self.mean-within_z*self.sigma), math.ceil(self.mean+within_z*self.sigma))
         plt.xlabel("k")
         plt.ylabel("Probability")
         plt.title(f"Binomial Distribution (n={self.n}, p={self.p})")
